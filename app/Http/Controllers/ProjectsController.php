@@ -10,13 +10,12 @@ class ProjectsController extends Controller
     public function __construct()
     {
         // $this->middleware('auth')->only(['create', 'store', 'edit', 'update', 'destroy']);
-        $this->middleware('auth')->except(['show']);
+        $this->middleware('auth')->except(['index']);
     }
 
     public function index()
     {
-        $projects = Project::all();
-        auth()->user();
+        $projects = Project::all()->where('owner_id', auth()->id());
         return view('projects.index', compact('projects'));
     }
 
@@ -35,8 +34,9 @@ class ProjectsController extends Controller
             'title' => ['required', 'min:5', 'max:50'],
             'description' => ['required', 'min:10', 'max:150']
         ]);
+        $attributes['owner_id'] = auth()->id();
         
-        Project::create($attributes + ['owner_id' => auth()->id()]);
+        Project::create($attributes);
 
         return redirect('/projects');
     }
@@ -46,6 +46,9 @@ class ProjectsController extends Controller
      */
     public function show(Project $project)
     {
+        if($project->owner_id !== auth()->id()){
+            abort(403);
+        }
         return view('projects.show', compact('project'));
     }
 

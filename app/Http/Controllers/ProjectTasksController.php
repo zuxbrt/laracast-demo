@@ -8,7 +8,6 @@ use App\Project;
 
 class ProjectTasksController extends Controller
 {
-
 	public function store(Project $project)
 	{
 		$attributes =request()->validate(['description' => 'required']);
