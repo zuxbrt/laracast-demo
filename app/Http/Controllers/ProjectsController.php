@@ -46,6 +46,8 @@ class ProjectsController extends Controller
      */
     public function show(Project $project)
     {
+        //abort_if(\Gate::denies('update', $project), 403);
+        //abort_unless(\Gate::allows('update', $project), 403);     or
         $this->authorize('view', $project);
         return view('projects.show', compact('project'));
     }
@@ -63,6 +65,7 @@ class ProjectsController extends Controller
      */
     public function update($id)
     {
+        $this->authorize('update', $project);
         $project->update(request(['title', 'description']));
         return redirect('/projects');
     }
@@ -72,6 +75,7 @@ class ProjectsController extends Controller
      */
     public function destroy(Project $project)
     {
+        $this->authorize('destroy', $project);
         $project->delete();
         return redirect('/projects');
     }

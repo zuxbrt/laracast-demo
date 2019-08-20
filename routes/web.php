@@ -7,6 +7,7 @@ Route::get('/', function () {
 
 // these can be replaced with
 Route::resource('projects', 'ProjectsController');
+//Route::resource('projects', 'ProjectsController')->middleware('can:update, project');
 
 
 Route::post('/projects/{project}/tasks', 'ProjectTasksController@store');
